@@ -15,7 +15,7 @@ const Modal = (props) => {
                 subtitle="Please enter a new book below."
                 from="left"
                 width="400px"
-                children={<EntryForm />}
+                children={<EntryForm bookshelf={props.bookshelf} onSubmit={((e, data) => props.onSubmit(e, data))} />}
                 onRequestClose={() => {
                     // triggered on "<" on left top click or on outside click
                     props.setModalState({isOpen: false})

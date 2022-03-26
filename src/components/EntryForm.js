@@ -3,15 +3,64 @@ import '../App.css'
 
 // TODO: Replace the radio buttons with a single toggle button
 
-const EntryForm = () => {
-    return(
-        <div className="input--container">
-            <form>
-                <input placeholder="Title" className="input--title"></input>
-                <input placeholder="Author" className="input--author"></input>
-                <input placeholder="Pages Read" className="input--pages"></input>
-                <input type="radio"></input>
-                <input type="radio"></input>
+
+
+const EntryForm = (props) => {
+
+    const [form, setForm] = React.useState(
+        {
+            title: '',
+            author: '',
+            pageCount: '',
+            bookStatus: ''
+        }
+    )
+
+    const onChange = (e) => {
+        const { name, value } = e.target
+        setForm(old => {
+            return(
+                {
+                    ...old,
+                    [name]: value
+                }
+            )
+        })
+
+    }
+
+    console.log(form)
+
+    return (
+        <div>
+            <form onSubmit={((e, data) => props.onSubmit(e, form))} className="input--container">
+                <input
+                    onChange={onChange}
+                    placeholder="Title"
+                    className="input--title"
+                    name="title"
+                ></input>
+                <input
+                    onChange={onChange}
+                    placeholder="Author"
+                    className="input--author"
+                    name="author"
+                ></input>
+                <input
+                    onChange={onChange}
+                    placeholder="Total pages"
+                    className="input--pages"
+                    name="pageCount"
+                ></input>
+                <div className="container">
+                    <p>Read?</p>
+                    <label className="switch"><input
+                        onChange={onChange}
+                        type="checkbox"
+                        name="bookStatus"
+                    />    <div></div>
+                    </label>
+                </div>
                 <button>Submit</button>
             </form>
         </div>
