@@ -2,6 +2,9 @@ import './App.css';
 import React, { useState } from "react";
 import Card from './components/Card';
 import Modal from './components/Modal';
+import { doc, getFirestore, getDoc } from "firebase/firestore";
+import firebaseApp from "./firebase"
+
 
 
 function App() {
@@ -26,6 +29,29 @@ function App() {
     ]
   )
 
+  const db = getFirestore(firebaseApp)
+
+  const getData = async () => {
+    const docRef = doc(db, 'books', 'book')
+    const docSnap = await getDoc(docRef);
+    const newBooks = []
+
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      newBooks.push(docSnap.data())
+      setBookShelf(newBooks)
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  }
+
+  console.log(bookshelf)
+
+  React.useEffect(() => {
+    getData()
+  }, [])
+
   const modalHandler = () => {
     setModalState({ isOpen: true })
   }
@@ -39,13 +65,13 @@ function App() {
   const removeBook = (item) => {
     const itemIndex = bookshelf.findIndex((i) => i.product === item.product);
     if (itemIndex > -1) {
-        const newShelf = bookshelf.slice();
-        newShelf.splice(itemIndex, 1)
-        setBookShelf(newShelf);
+      const newShelf = bookshelf.slice();
+      newShelf.splice(itemIndex, 1)
+      setBookShelf(newShelf);
     }
   }
 
-  const cardElements = bookshelf.map((book,index )=> {
+  const cardElements = bookshelf.map((book, index) => {
     return (
       <Card
         title={book.title}
