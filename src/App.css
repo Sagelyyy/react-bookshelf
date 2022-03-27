@@ -46,11 +46,47 @@ body{background-color: #D4F5F5;}
 }
 
 .App--title{
+  display: flex;
+  justify-content: space-around;
   text-align: center;
   width: 100%;
   height: 4rem;
   background-color: #3A405A;
   line-height: 4.5rem;
+}
+
+.App--login{
+  align-self: flex-end;
+}
+
+.userInfo--container{
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  width: 300px;
+  height: 90px;
+}
+
+.userInfo--avatar{
+  margin-top: 2rem;
+  border-radius: 50%;
+  width: 50px;
+  height: auto;
+  gap: 1rem;
+  border: 1px solid black;
+}
+
+.userInfo--name--container{
+  margin-top: 2rem;
+  align-items: center;
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.userInfo--name{
+  font-weight: 700;
+  line-height: 20px;
 }
 
 .app--menu--small{

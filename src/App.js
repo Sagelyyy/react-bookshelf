@@ -4,10 +4,13 @@ import Card from './components/Card';
 import Modal from './components/Modal';
 import { doc, getFirestore, getDoc } from "firebase/firestore";
 import firebaseApp from "./firebase"
-
+import Login from './components/Login';
+import UserInfo from './components/UserInfo';
 
 
 function App() {
+
+  const [user, setUser] = useState(null);
 
   const [modalState, setModalState] = useState({
     isOpen: false
@@ -49,8 +52,13 @@ function App() {
   console.log(bookshelf)
 
   React.useEffect(() => {
+    firebaseApp.auth().onAuthStateChanged(user => {
+      setUser(user);
+    })
     getData()
   }, [])
+
+  console.log(user)
 
   const modalHandler = () => {
     setModalState({ isOpen: true })
@@ -86,7 +94,12 @@ function App() {
 
   return (
     <div className="App">
-      <div className='App--title'><h1>Your Personal Library <span className='App--book--icon'>📖</span></h1></div>
+      <div className='App--title'>
+        <h1>Your Personal Library <span className='App--book--icon'>📖</span></h1>
+        <div className='App--login'>
+        {user ?  <UserInfo user={user}/> : <Login />}
+        </div>
+        </div>
       <span onClick={modalHandler} className="material-icons App--menu">
         add
       </span>
