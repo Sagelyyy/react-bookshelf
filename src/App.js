@@ -2,7 +2,7 @@ import './App.css';
 import React, { useState } from "react";
 import Card from './components/Card';
 import Modal from './components/Modal';
-import { doc, getFirestore, getDoc } from "firebase/firestore";
+import { doc, getFirestore, getDocs, query, collection, where } from "firebase/firestore";
 import firebaseApp from "./firebase"
 import Login from './components/Login';
 import UserInfo from './components/UserInfo';
@@ -16,49 +16,37 @@ function App() {
     isOpen: false
   })
 
-  const [bookshelf, setBookShelf] = useState(
-    [{
-      title: 'The Lord of The Rings',
-      author: 'J.R.R. Tolkien',
-      pageCount: '1178',
-      bookStatus: ''
-    },
-    {
-      title: '1984',
-      author: 'George Orwell',
-      pageCount: '328',
-      bookStatus: ''
-    }
-    ]
-  )
+  const [bookshelf, setBookShelf] = useState([])
 
   const db = getFirestore(firebaseApp)
 
-  const getData = async () => {
-    const docRef = doc(db, 'books', 'book')
-    const docSnap = await getDoc(docRef);
-    const newBooks = []
-
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-      newBooks.push(docSnap.data())
-      setBookShelf(newBooks)
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
-  }
-
-  console.log(bookshelf)
-
-  React.useEffect(() => {
+  const getUser = async () => {
     firebaseApp.auth().onAuthStateChanged(user => {
       setUser(user);
     })
-    getData()
-  }, [])
+  }
 
+  const getData = async () => {
+    console.log('getting data!')
+
+    const querySnapshot = await getDocs(collection(db, `users/${user.email}/books`));
+    const dbBooks = []
+    querySnapshot.forEach((doc) => {
+      dbBooks.push(doc.data())
+      console.log(doc.id, " => ", doc.data());
+    });
+    setBookShelf(dbBooks)
+  }
+
+  console.log(bookshelf)
   console.log(user)
+
+  React.useEffect(() => {
+    getUser()
+    if (user) {
+      getData()
+    }
+  }, [user])
 
   const modalHandler = () => {
     setModalState({ isOpen: true })
@@ -67,7 +55,6 @@ function App() {
   const onSubmit = (e, data) => {
     e.preventDefault()
     setBookShelf(old => [...old, data])
-    console.log(bookshelf)
   }
 
   const removeBook = (item) => {
@@ -97,9 +84,9 @@ function App() {
       <div className='App--title'>
         <h1>Your Personal Library <span className='App--book--icon'>📖</span></h1>
         <div className='App--login'>
-        {user ?  <UserInfo user={user}/> : <Login />}
+          {user ? <UserInfo user={user} /> : <Login />}
         </div>
-        </div>
+      </div>
       <span onClick={modalHandler} className="material-icons App--menu">
         add
       </span>

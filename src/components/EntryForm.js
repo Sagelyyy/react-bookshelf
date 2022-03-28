@@ -19,7 +19,7 @@ const EntryForm = (props) => {
     const onChange = (e) => {
         const { name, value } = e.target
         setForm(old => {
-            return(
+            return (
                 {
                     ...old,
                     [name]: value
@@ -28,8 +28,6 @@ const EntryForm = (props) => {
         })
 
     }
-
-    console.log(form)
 
     return (
         <div>

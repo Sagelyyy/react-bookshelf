@@ -18,7 +18,7 @@ const Modal = (props) => {
                 children={<EntryForm bookshelf={props.bookshelf} onSubmit={((e, data) => props.onSubmit(e, data))} />}
                 onRequestClose={() => {
                     // triggered on "<" on left top click or on outside click
-                    props.setModalState({isOpen: false})
+                    props.setModalState({ isOpen: false })
                 }}
             ></SlidingPane>
         </div>
