@@ -2,7 +2,7 @@ import './App.css';
 import React, { useState } from "react";
 import Card from './components/Card';
 import Modal from './components/Modal';
-import { doc, getFirestore, getDocs, query, collection, where } from "firebase/firestore";
+import { getFirestore, getDocs, collection, doc, setDoc, addDoc } from "firebase/firestore";
 import firebaseApp from "./firebase"
 import Login from './components/Login';
 import UserInfo from './components/UserInfo';
@@ -26,10 +26,22 @@ function App() {
     })
   }
 
+  const writeUserData = async  (userId, name, email) => {
+    const docRef= await setDoc(doc(db, "users", userId), {
+      name: name,
+      email: email
+
+    })
+    console.log(`UserID: ${userId}`)
+  }
+
+  const writeBookData = async (userid, book) => {
+    const docRef = await addDoc(collection(db, "users", userid, "books"), book);
+  }
+
   const getData = async () => {
     console.log('getting data!')
-
-    const querySnapshot = await getDocs(collection(db, `users/${user.email}/books`));
+    const querySnapshot = await getDocs(collection(db, `users/${user.uid}/books`));
     const dbBooks = []
     querySnapshot.forEach((doc) => {
       dbBooks.push(doc.data())
@@ -39,12 +51,17 @@ function App() {
   }
 
   console.log(bookshelf)
-  console.log(user)
+
 
   React.useEffect(() => {
     getUser()
     if (user) {
+      console.log(user)
       getData()
+      writeUserData(user.uid, user.displayName, user.email)
+    }
+    if(!user){
+      setBookShelf([])
     }
   }, [user])
 
@@ -55,6 +72,11 @@ function App() {
   const onSubmit = (e, data) => {
     e.preventDefault()
     setBookShelf(old => [...old, data])
+
+    //
+    if(user){
+      writeBookData(user.uid, data)
+    }
   }
 
   const removeBook = (item) => {
