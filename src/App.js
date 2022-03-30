@@ -26,13 +26,12 @@ function App() {
     })
   }
 
-  const writeUserData = async  (userId, name, email) => {
-    const docRef= await setDoc(doc(db, "users", userId), {
+  const writeUserData = async (userId, name, email) => {
+    const docRef = await setDoc(doc(db, "users", userId), {
       name: name,
       email: email
 
     })
-    console.log(`UserID: ${userId}`)
   }
 
   const writeBookData = async (userid, book) => {
@@ -40,27 +39,21 @@ function App() {
   }
 
   const getData = async () => {
-    console.log('getting data!')
     const querySnapshot = await getDocs(collection(db, `users/${user.uid}/books`));
     const dbBooks = []
     querySnapshot.forEach((doc) => {
       dbBooks.push(doc.data())
-      console.log(doc.id, " => ", doc.data());
     });
     setBookShelf(dbBooks)
   }
 
-  console.log(bookshelf)
-
-
   React.useEffect(() => {
     getUser()
     if (user) {
-      console.log(user)
       getData()
       writeUserData(user.uid, user.displayName, user.email)
     }
-    if(!user){
+    if (!user) {
       setBookShelf([])
     }
   }, [user])
@@ -72,15 +65,15 @@ function App() {
   const onSubmit = (e, data) => {
     e.preventDefault()
     setBookShelf(old => [...old, data])
-    if(user){
+    if (user) {
       writeBookData(user.uid, data)
     }
 
-    setModalState({isOpen: false})
+    setModalState({ isOpen: false })
   }
 
   const removeBook = (item) => {
-    if(user){
+    if (user) {
       deleteBookData(user.uid, item)
     }
     const itemIndex = bookshelf.findIndex((i) => i.title === item.title);
@@ -94,11 +87,9 @@ function App() {
   const deleteBookData = async (userID, item) => {
     const querySnapshot = await getDocs(collection(db, "users", userID, "books"));
     querySnapshot.forEach((docItem) => {
-      if(item.title === docItem.data().title){
-        console.log(item.title, '=>', docItem.id, docItem.data().title )
+      if (item.title === docItem.data().title) {
         deleteDoc(doc(db, "users", userID, "books", docItem.id))
       }
-      // console.log(doc.id, " => ", doc.data().title);
     });
   }
 
@@ -127,6 +118,8 @@ function App() {
         add
       </span>
       <Modal onSubmit={((e, data) => onSubmit(e, data))} bookshelf={bookshelf} modalState={modalState} setModalState={setModalState} />
+      {user ? '' : <h1 style={{textAlign: 'center', marginLeft: '5rem', fontWeight: '300'}}>Please login to save your books.</h1> }
+      <br></br>
       <div className='App--book'>
         {cardElements.length > 0 ? cardElements : <h1>Click the <span className='material-icons app--menu--small'>add</span> to add some books!</h1>}
       </div>
