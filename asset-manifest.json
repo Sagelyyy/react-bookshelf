@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/react-bookshelf/static/css/main.623667c6.css",
+    "main.js": "/react-bookshelf/static/js/main.11c85eed.js",
+    "static/js/787.60922e94.chunk.js": "/react-bookshelf/static/js/787.60922e94.chunk.js",
+    "index.html": "/react-bookshelf/index.html",
+    "main.623667c6.css.map": "/react-bookshelf/static/css/main.623667c6.css.map",
+    "main.11c85eed.js.map": "/react-bookshelf/static/js/main.11c85eed.js.map",
+    "787.60922e94.chunk.js.map": "/react-bookshelf/static/js/787.60922e94.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.623667c6.css",
+    "static/js/main.11c85eed.js"
+  ]
+}
