@@ -101,9 +101,13 @@ body{background-color: #D4F5F5;}
 }
 
 .App--book{
+  margin-left: 5rem;
+  justify-content:left;
   display: flex;
   flex-direction: row;
   gap: 1rem;
+  flex-wrap: wrap;
+  flex: 1 1;
 }
 
 .App--book--icon{
@@ -116,7 +120,7 @@ body{background-color: #D4F5F5;}
   display: flex;
   flex-direction: column;
   width: 23rem;
-  height: auto;
+  height: 100%;
   background-color: #93B7BE;
   gap: 0.5rem;
   padding: 1rem;

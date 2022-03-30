@@ -2,7 +2,7 @@ import './App.css';
 import React, { useState } from "react";
 import Card from './components/Card';
 import Modal from './components/Modal';
-import { getFirestore, getDocs, collection, doc, setDoc, addDoc } from "firebase/firestore";
+import { getFirestore, getDocs, collection, doc, setDoc, addDoc, deleteDoc, query, where } from "firebase/firestore";
 import firebaseApp from "./firebase"
 import Login from './components/Login';
 import UserInfo from './components/UserInfo';
@@ -72,20 +72,34 @@ function App() {
   const onSubmit = (e, data) => {
     e.preventDefault()
     setBookShelf(old => [...old, data])
-
-    //
     if(user){
       writeBookData(user.uid, data)
     }
+
+    setModalState({isOpen: false})
   }
 
   const removeBook = (item) => {
-    const itemIndex = bookshelf.findIndex((i) => i.product === item.product);
+    if(user){
+      deleteBookData(user.uid, item)
+    }
+    const itemIndex = bookshelf.findIndex((i) => i.title === item.title);
     if (itemIndex > -1) {
       const newShelf = bookshelf.slice();
       newShelf.splice(itemIndex, 1)
       setBookShelf(newShelf);
     }
+  }
+
+  const deleteBookData = async (userID, item) => {
+    const querySnapshot = await getDocs(collection(db, "users", userID, "books"));
+    querySnapshot.forEach((docItem) => {
+      if(item.title === docItem.data().title){
+        console.log(item.title, '=>', docItem.id, docItem.data().title )
+        deleteDoc(doc(db, "users", userID, "books", docItem.id))
+      }
+      // console.log(doc.id, " => ", doc.data().title);
+    });
   }
 
   const cardElements = bookshelf.map((book, index) => {
