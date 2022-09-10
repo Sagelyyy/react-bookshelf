@@ -25,4 +25,4 @@ React-Bookshelf is a personal library I wrote using Firebase and React. You can 
 
 ## Preview
 
-![Bookshelf](https://imgur.com/iILiEB0)
+![Bookshelf](https://i.imgur.com/iILiEB0.jpg)
